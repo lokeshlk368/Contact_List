@@ -9,7 +9,8 @@
         <link rel="stylesheet" href="css/home.css">
     </head>
     <body>
-           <h1 id="page-heading"><i class="far fa-id-card"></i>My Contacts List</h1>
+        <center>
+           <h1 id="page-heading"><span><i class="far fa-id-card"></i></span>My Contacts List</h1>
            <div id="contact-container">
                 <ul>
                     <% for(let i of contact_list){ %>
@@ -19,7 +20,7 @@
                         <p><%= i.phone %></p>
                         </div>
                         <div class="delete-button">
-                            <a href='/delete-contact/?phone=<%= i.phone %>'>
+                            <a href='/delete-contact/?id=<%= i._id %>'>
                                 <i class="fas fa-window-close"></i>
                             </a>
                             </div>
@@ -28,13 +29,16 @@
                     <%}%>
                 </ul>
            </div>
-    <div style="background-color:cyan; text-align: center;">
+
         <form action="/create-contact" method="POST">
-            <input type="text" name="name" placeholder="Enter name" required></br>
-            <input type="number" name="phone" placeholder="Enter number" required></br>
+        <div class="formSection">
+            <input type="text" name="name" placeholder="Enter name" required>
+            <input type="number" name="phone" placeholder="Enter number" required>
             <button type="submit">Add Contact</button>
+            </div>
             </form>
         </div>
+        </center>
  
 <script src="js/home.js"></script>
     </body>

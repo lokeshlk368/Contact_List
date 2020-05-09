@@ -1,4 +1,7 @@
+const db=require('./config/mongoose.js');
+const Contact=require('./models/contact');
 const express=require('express');
+
 const port=8005;
 const path=require('path');
 
@@ -35,9 +38,21 @@ var contactList=[
   {
     // console.log(__dirname);
 //    res.send('<h1 style="color:red;">Cool it is running or it is</h1>');
-    return res.render('home',{
-    title:"This is mini contact",
-    contact_list:contactList
+
+//Fecting the contact list
+   Contact.find({},function(err,contacts){
+       if(err)
+       {
+           console.log("Error in fectching contact");
+           return;
+       }
+
+       return res.render('home',{
+        title:"This is mini contact",
+        contact_list:contacts
+
+   })
+    
    });
  });
 
@@ -48,14 +63,28 @@ var contactList=[
     // console.log(req.body.name);
     // console.log(req.body.phone);
 
-    contactList.push({
-             name:req.body.name,
-             phone:req.body.phone
+    // contactList.push({
+    //          name:req.body.name,
+    //          phone:req.body.phone
+
+
+    Contact.create({
+        name:req.body.name,
+        phone:req.body.phone
+    },function(error,newContact){
+        if(error)
+        {
+            console.log('error in creating a contect');
+            return;
+        }
+        console.log('************',newContact);
 
     });
-    return res.redirect('/');
 
- });
+    });
+
+
+   
 
 app.get('/practice',function(req,res){
     return res.render('practice',{
@@ -65,14 +94,27 @@ app.get('/practice',function(req,res){
 
 
 app.get('/delete-contact',function(req,res){
- let phone=req.query.phone;
- let contactIndex=contactList.findIndex(contact=>contact.phone==phone);
- if(contactIndex != -1)
- {
-     contactList.splice(contactIndex,1);
+    //get the id from query in the url
+ let id=req.query.id;
+ //find the contact in the database using id and delete
 
- }
- return res.redirect('/');
+ Contact.findByIdAndDelete(id,function(err){
+      if(err)
+      {
+          console.log('error in deletion an object from database');
+          return;
+      }
+      return res.redirect('back');
+
+ });
+
+//  let contactIndex=contactList.findIndex(contact=>contact.phone==phone);
+//  if(contactIndex != -1)
+//  {
+//      contactList.splice(contactIndex,1);
+
+//  }
+//  return res.redirect('/');
 });
 
 app.listen(port,function(err)
